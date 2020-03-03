@@ -14,6 +14,17 @@ import java.awt.Toolkit;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JLabel;
+
+import engine.CoreEngine;
+import java.awt.Color;
+import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
+import java.awt.GridLayout;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 
 public class GUI extends JFrame {
 
@@ -22,6 +33,11 @@ public class GUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JLabel lblTextLog;
+	private JButton btnStartAttack;
+	private boolean gameStarted = false;
+	private JScrollPane scrollPane;
+	private JMenuBar menuBar;
 
 	/**
 	 * Launch the application.
@@ -63,7 +79,23 @@ public class GUI extends JFrame {
 	//
 	//========================================
 	private void createEvents() {
+		
+		//Game Engine Start
+		if(gameStarted == false) {
+			btnStartAttack.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					btnStartAttack.setText("Attack");
+					CoreEngine CoreEngine = new CoreEngine();
+					lblTextLog.setText("Game Start");
+				}
+			});
+		}
+		
 		// TODO Auto-generated method stub
+		
+		
+		
+		
 		
 	}
 
@@ -71,31 +103,76 @@ public class GUI extends JFrame {
 		// TODO Auto-generated method stub
 		
 		setTitle("d20Game");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/resources/fireball-sky-3.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/resources/Images/fireball-sky-3.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 774, 471);
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JButton btnNewButton = new JButton("New button");
+		btnStartAttack = new JButton("Start");
+		btnStartAttack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		
+		lblTextLog = new JLabel(" ");
+		lblTextLog.setBackground(Color.BLACK);
+		
+		scrollPane = new JScrollPane();
+		
+		JPanel pnlStats = new JPanel();
+		pnlStats.setBorder(new TitledBorder(null, "Stats", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
-					.addGap(61))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnStartAttack, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(10)
+							.addComponent(lblTextLog, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 344, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(191)
-					.addComponent(btnNewButton)
-					.addContainerGap(38, Short.MAX_VALUE))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(144)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblTextLog, GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnStartAttack)
+					.addContainerGap())
 		);
+		
+		JProgressBar progressBar = new JProgressBar();
+		progressBar.setBounds(16, 32, 299, 14);
+		progressBar.setValue(100);
+		progressBar.setForeground(Color.BLUE);
+		
+		JLabel lblHitPoints = new JLabel("Hit Points");
+		lblHitPoints.setBounds(6, 16, 46, 14);
+		
+		JLabel lblHpAmount = new JLabel("hp amount");
+		lblHpAmount.setBounds(62, 16, 51, 14);
+		pnlStats.setLayout(null);
+		pnlStats.add(progressBar);
+		pnlStats.add(lblHitPoints);
+		pnlStats.add(lblHpAmount);
 		contentPane.setLayout(gl_contentPane);
 		
 	}
-
 }
