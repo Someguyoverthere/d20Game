@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Toolkit;
@@ -17,6 +18,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 
 import engine.CoreEngine;
+import common.GameLog;
+
+
 import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
@@ -36,8 +40,13 @@ public class GUI extends JFrame {
 	private JLabel lblTextLog;
 	private JButton btnStartAttack;
 	private boolean gameStarted = false;
+	private boolean inBattle = false;
+	private boolean inMenu = false;
 	private JScrollPane scrollPane;
 	private JMenuBar menuBar;
+	
+	
+	
 
 	/**
 	 * Launch the application.
@@ -85,8 +94,11 @@ public class GUI extends JFrame {
 			btnStartAttack.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					btnStartAttack.setText("Attack");
+					gameStarted = true;
 					CoreEngine CoreEngine = new CoreEngine();
-					lblTextLog.setText("Game Start");
+					GameLog gameLog = new GameLog();
+					gameLog.append("Game Start");
+					updateLog(gameLog);
 				}
 			});
 		}
@@ -95,6 +107,20 @@ public class GUI extends JFrame {
 		
 		
 		
+		
+		
+	}
+	
+	private void updateLog(GameLog gameLog) {
+		ArrayList<String> tempLog = gameLog.getLastMessages();
+		String text = "";
+		
+		int i = 0; while (i < tempLog.size()) i++;
+		{
+			text += tempLog.get(i);
+			
+			
+		}
 		
 		
 	}
