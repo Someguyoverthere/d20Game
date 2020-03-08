@@ -29,6 +29,9 @@ import javax.swing.SwingConstants;
 import java.awt.GridLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.TextArea;
 
 public class GUI extends JFrame {
 
@@ -37,13 +40,21 @@ public class GUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel lblTextLog;
 	private JButton btnStartAttack;
 	private boolean gameStarted = false;
 	private boolean inBattle = false;
 	private boolean inMenu = false;
 	private JScrollPane scrollPane;
 	private JMenuBar menuBar;
+	private JMenu mnFile;
+	private JMenuItem mntmNewGame;
+	private JMenuItem mntmSaveGame;
+	private JMenuItem mntmLoadGame;
+	private JMenuItem mntmExit;
+	/**
+	 * @wbp.nonvisual location=194,209
+	 */
+	private final TextArea txtLog = new TextArea();
 	
 	
 	
@@ -75,6 +86,7 @@ public class GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public GUI() {
+		txtLog.setSelectionEnd(30);
 		
 		
 		
@@ -95,15 +107,21 @@ public class GUI extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					btnStartAttack.setText("Attack");
 					gameStarted = true;
+					System.out.println("Init core Engine");
 					CoreEngine CoreEngine = new CoreEngine();
+					
+					System.out.println("Init GameLog");
 					GameLog gameLog = new GameLog();
+					System.out.println("Gamelog initialized");
+					
 					gameLog.append("Game Start");
+					gameLog.append("test");
 					updateLog(gameLog);
 				}
 			});
 		}
 		
-		// TODO Auto-generated method stub
+		
 		
 		
 		
@@ -113,14 +131,17 @@ public class GUI extends JFrame {
 	
 	private void updateLog(GameLog gameLog) {
 		ArrayList<String> tempLog = gameLog.getLastMessages();
-		String text = "";
 		
-		int i = 0; while (i < tempLog.size()) i++;
+		
+		for ( int i = tempLog.size()-1; (i >= 0); i--)
 		{
-			text += tempLog.get(i);
+			//text += tempLog.get(i) + "\n";
+			txtLog.append(tempLog.get(i));
+			
 			
 			
 		}
+		
 		
 		
 	}
@@ -135,6 +156,21 @@ public class GUI extends JFrame {
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
+		mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		mntmNewGame = new JMenuItem("New Game");
+		mnFile.add(mntmNewGame);
+		
+		mntmSaveGame = new JMenuItem("Save Game");
+		mnFile.add(mntmSaveGame);
+		
+		mntmLoadGame = new JMenuItem("Load Game");
+		mnFile.add(mntmLoadGame);
+		
+		mntmExit = new JMenuItem("Exit");
+		mnFile.add(mntmExit);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -144,9 +180,6 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		
-		lblTextLog = new JLabel(" ");
-		lblTextLog.setBackground(Color.BLACK);
 		
 		scrollPane = new JScrollPane();
 		
@@ -159,13 +192,11 @@ public class GUI extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnStartAttack, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(10)
-							.addComponent(lblTextLog, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGap(379)
 							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 344, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addContainerGap(13, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -176,9 +207,7 @@ public class GUI extends JFrame {
 							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblTextLog, GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))))
+							.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnStartAttack)
 					.addContainerGap())
