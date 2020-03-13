@@ -16,8 +16,14 @@ public class CoreEngine {
 		
 	}
 	
-	public void getStr(creature creature) {
-		System.out.println(creature.getStr());
+	
+	public int attack(creature creature1, creature creature2) {
+		
+		if((creature1.getAttackBonus()) + Roller.rollTotal(1, 20) > creature2.getAC()) {
+			return 5;
+			
+		}
+		return 0;
 		
 	}
 	

@@ -57,5 +57,9 @@ public class GameLog {
 	public int getSize() {
 		return gameLog.size();
 	}
+	
+	public void resetLog() {
+		gameLog.clear();
+	}
 
 }

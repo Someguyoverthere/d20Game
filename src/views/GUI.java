@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
@@ -45,10 +46,8 @@ public class GUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JButton btnStartAttack;
-	private boolean gameStarted = false;
-	private boolean inBattle = false;
-	private boolean inMenu = false;
+	private JButton btnAttack;
+
 	private JScrollPane scrollPane;
 	private JMenuBar menuBar;
 	private JMenu mnFile;
@@ -59,6 +58,17 @@ public class GUI extends JFrame {
 	private JMenuItem mntmExit;
 	private JLabel lblStrNum;
 	
+	private JMenuItem mntmReset;
+	
+	
+	//Game engine specific fields
+	GameLog gameLog;
+	CoreEngine CoreEngine;
+	ArrayList<creature> enemyCreatures = new ArrayList<creature>();
+	ArrayList<creature> alliedCreatures = new ArrayList<creature>();
+	private boolean gameStarted = false;
+	private boolean inBattle = false;
+	private boolean inMenu = false;
 	
 	
 
@@ -103,21 +113,19 @@ public class GUI extends JFrame {
 	//========================================
 	private void createEvents() {
 		
-		//Game Engine Start
 		
+		//Game Engine Start
 		mntmNewGame.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					
-					System.out.println("Init GameLog");
-					GameLog gameLog = new GameLog();
-					System.out.println("Gamelog initialized");
+					
 					
 					if(gameStarted != true) {
 						
-						btnStartAttack.setText("Attack");
+						btnAttack.setText("Attack");
 						gameStarted = true;
 						System.out.println("Init core Engine");
-						CoreEngine CoreEngine = new CoreEngine();
+						CoreEngine = new CoreEngine();
 						
 						
 						
@@ -125,9 +133,12 @@ public class GUI extends JFrame {
 						gameLog.append("=============");
 						updateLog(gameLog);
 						
-						Player player = CoreEngine.initializeGame();
-						updateStats(player.getStr(), lblStrNum);
-						
+						//Player player = CoreEngine.initializeGame();
+						//Player character will always take array slot 0
+						//I.E creatures.get(0)
+						alliedCreatures.add(CoreEngine.initializeGame());
+						updateStats(alliedCreatures.get(0).getStr(), lblStrNum);
+						btnAttack.setEnabled(true);
 					}
 					else {
 						gameLog.append("Error: Game already in progress.");
@@ -138,6 +149,45 @@ public class GUI extends JFrame {
 			});
 		
 		
+		//Exit function
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(DO_NOTHING_ON_CLOSE);
+			}
+		});
+		
+		
+		//Attack button
+		btnAttack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+			}
+		});
+		
+		//Reset the game to its initial state
+		mntmReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(gameStarted != false) {
+					alliedCreatures.clear();
+					enemyCreatures.clear();
+					btnAttack.setEnabled(false);
+					gameStarted = false;
+					gameLog.append("===GAME OVER===");
+					updateLog(gameLog);
+					gameLog.resetLog();
+				}
+				else {
+					gameLog.append("Can't reset what hasn't started.");
+					updateLog(gameLog);
+				}
+					
+					
+				
+				
+			}
+		});
+		
 		
 		
 		
@@ -146,6 +196,7 @@ public class GUI extends JFrame {
 		
 	}
 	
+	//Updates the gamelog on the GUI
 	private void updateLog(GameLog gameLog) {
 		ArrayList<String> tempLog = gameLog.getLastMessages();
 		//String text = "";
@@ -163,13 +214,24 @@ public class GUI extends JFrame {
 		
 	}
 	
+	//For updating character attributes when it would be nessecary
 	private void updateStats(int stat, JLabel attribute) {
 		attribute.setText(String.valueOf(stat));
 		
 	}
+	
+	
+	//========================================
+	//GUI junk
+	//========================================
+	
 
 	private void initComponents() {
 		// TODO Auto-generated method stub
+		
+		System.out.println("Init GameLog");
+		gameLog = new GameLog();
+		System.out.println("Gamelog initialized");
 		
 		setTitle("d20Game");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/resources/Images/fireball-sky-3.png")));
@@ -191,14 +253,18 @@ public class GUI extends JFrame {
 		mntmLoadGame = new JMenuItem("Load Game");
 		mnFile.add(mntmLoadGame);
 		
-		mntmExit = new JMenuItem("Exit");
+		mntmReset = new JMenuItem("Reset Game");
+		mnFile.add(mntmReset);
+		
+		mntmExit = new JMenuItem("Exit Game");
 		mnFile.add(mntmExit);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		btnStartAttack = new JButton("Start");
-		btnStartAttack.addActionListener(new ActionListener() {
+		btnAttack = new JButton("Attack");
+		btnAttack.setEnabled(false);
+		btnAttack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
@@ -213,32 +279,36 @@ public class GUI extends JFrame {
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnStartAttack, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
 							.addComponent(textLog, GroupLayout.PREFERRED_SIZE, 371, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnAttack))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 344, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(13, Short.MAX_VALUE))
+					.addContainerGap(5, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap(11, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(144)
-							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textLog, GroupLayout.PREFERRED_SIZE, 352, GroupLayout.PREFERRED_SIZE))))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnStartAttack)
-					.addContainerGap())
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(144)
+									.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+										.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
+										.addComponent(textLog, GroupLayout.PREFERRED_SIZE, 352, GroupLayout.PREFERRED_SIZE))))
+							.addGap(29))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(btnAttack)
+							.addContainerGap())))
 		);
 		
 		JProgressBar progressBar = new JProgressBar();

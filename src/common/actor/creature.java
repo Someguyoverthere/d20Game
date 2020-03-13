@@ -20,6 +20,8 @@ public abstract class creature {
 
 	protected int hpMax;
 	protected int hpCurrent;
+	
+	protected String attackBonusAttribute = "str";
 
 	protected int AC = 10;
 	boolean infiniteHP = false;
@@ -92,6 +94,19 @@ public abstract class creature {
 			mod -= 0.5;
 		}
 		return (int) mod;
+	}
+	
+	public int getAttackBonus() {
+		switch(attackBonusAttribute) {
+		case "Dex": 
+			if(this.dex > this.str) {
+				return getMod(dex);
+			}
+		
+		}
+		
+		return getMod(str);
+		
 	}
 
 	public int getStr() {
