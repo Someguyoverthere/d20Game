@@ -1,5 +1,7 @@
 package common.actor.objects;
 
-public class ArmorTemplate {
+import common.actor.object;
+
+public class ArmorTemplate extends object{
 
 }

@@ -1,8 +1,12 @@
 package common.actor;
 
 import common.Roller;
+import java.util.ArrayList;
 
 public abstract class creature {
+	
+	ArrayList<object> Inventory = new ArrayList<object>();
+	ArrayList<object> equippedItems = new ArrayList<object>();
 
 	protected int str;
 	protected int dex;
@@ -80,6 +84,10 @@ public abstract class creature {
 		this.hpCurrent = hpMax;
 		this.infiniteHP = infiniteHP;
 
+	}
+	
+	public void addItem(object item) {
+		Inventory.add(item);
 	}
 
 	public static int getMod(int stat) {
