@@ -7,9 +7,10 @@ public abstract class object {
 	
 	protected int AC = 5;
 	
-	protected int damageMin;
-	protected int damageMax;
+	protected int numOfDamageDice;
+	protected int sizeOfDamageDice;
 	
+
 	//========================================
 	//Elemental Resistances
 	//========================================
@@ -31,8 +32,18 @@ public abstract class object {
 	protected int ballisticResistance;
 	
 	
-	//========================================
-	//Material Resistances
-	//========================================
+	public int getSizeOfDamageDice() {
+		return sizeOfDamageDice;
+	}
+	public void setSizeOfDamageDice(int sizeOfDamageDice) {
+		this.sizeOfDamageDice = sizeOfDamageDice;
+	}
+	public int getNumOfDamageDice() {
+		return numOfDamageDice;
+	}
+	public void setNumOfDamageDice(int numOfDamageDice) {
+		this.numOfDamageDice = numOfDamageDice;
+	}
+	
 
 }

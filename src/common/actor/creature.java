@@ -7,6 +7,13 @@ public abstract class creature {
 	
 	ArrayList<object> Inventory = new ArrayList<object>();
 	ArrayList<object> equippedItems = new ArrayList<object>();
+	//Slot 0 is the mainhand slot
+	//Slot 1 is the offhand slot
+	//Slot 2 is the armor slot
+	
+	protected boolean isWieldingMainhand = true;
+	protected boolean isWieldingOffHand = false;
+	protected String name = "";
 
 	protected int str;
 	protected int dex;
@@ -86,11 +93,60 @@ public abstract class creature {
 
 	}
 	
+	public int[] getDamageDice() {
+		int[] damage = new int[2];
+		damage[0] = equippedItems.get(0).getNumOfDamageDice();
+		damage[1] = equippedItems.get(0).getSizeOfDamageDice();
+		
+		
+		
+		return damage;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+		
+	}
+	
+	
+	
+	public int rollDamageDice() {
+		
+		return Roller.rollTotal(equippedItems.get(0).getNumOfDamageDice(), equippedItems.get(0).getSizeOfDamageDice());
+	}
+	
 	public void addItem(object item) {
 		Inventory.add(item);
 	}
+	
+	public void equipMainHand(int itemNumber) {
+		equippedItems.add(0, Inventory.get(itemNumber));
+		
+	}
+	
+	
 
-	public static int getMod(int stat) {
+	public boolean isWieldingMainhand() {
+		return isWieldingMainhand;
+	}
+
+	public void setWieldingMainhand(boolean isWieldingMainhand) {
+		this.isWieldingMainhand = isWieldingMainhand;
+	}
+
+	public boolean isWieldingOffHand() {
+		return isWieldingOffHand;
+	}
+
+	public void setWieldingOffHand(boolean isWieldingOffHand) {
+		this.isWieldingOffHand = isWieldingOffHand;
+	}
+
+	public int getMod(int stat) {
 		
 		double mod = (10 - stat)/2;
 
