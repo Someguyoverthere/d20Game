@@ -7,7 +7,7 @@ public class Player extends creature {
 	
 
 	public Player(boolean randomStats) {
-		super(true);
+		super(true, 1, 12);
 		name = "Player";
 		// TODO Auto-generated constructor stub
 	}

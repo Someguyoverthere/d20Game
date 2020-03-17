@@ -22,31 +22,17 @@ public class GameLog {
 	}
 
 	public void append(String message) {
-		gameLog.add(0, message + "\n");
+		gameLog.add(message + "\n");
 
 	}
 
-	public ArrayList<String> getLastMessages() {
+	public ArrayList<String> getLastMessages(int logLineNumber) {
 
 		ArrayList<String> tempLog = new ArrayList<String>();
 
-		if (gameLog.size() < 10) {
-			System.out.println("Log size less than 10");
+		for (int i = logLineNumber; (i < gameLog.size()); i++) {
 
-			for (int i = gameLog.size(); (i >= 0); i--) {
-
-				tempLog.add(0, gameLog.get(i));
-
-			}
-
-		} else {
-			System.out.println("Log size greater than 10" + gameLog.size());
-
-			for (int i = gameLog.size() - 1; (i >= 0); i--) {
-
-				tempLog.add(0, gameLog.get(i));
-
-			}
+			tempLog.add(gameLog.get(i));
 
 		}
 
@@ -57,9 +43,10 @@ public class GameLog {
 	public int getSize() {
 		return gameLog.size();
 	}
-	
+
 	public void resetLog() {
 		gameLog.clear();
+		initArray();
 	}
 
 }

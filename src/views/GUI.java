@@ -39,6 +39,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.TextArea;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 public class GUI extends JFrame {
 
@@ -48,8 +49,6 @@ public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnAttack;
-
-	private JScrollPane scrollPane;
 	private JMenuBar menuBar;
 	private JMenu mnFile;
 	private JTextArea textLog;
@@ -58,8 +57,8 @@ public class GUI extends JFrame {
 	private JMenuItem mntmLoadGame;
 	private JMenuItem mntmExit;
 	private JLabel lblStrNum;
-
-	private JMenuItem mntmReset;
+	private JScrollPane scrollPane_1;
+	private JMenuItem mntmEnd;
 
 	// Game engine specific fields
 	GameLog gameLog;
@@ -69,6 +68,8 @@ public class GUI extends JFrame {
 	private boolean gameStarted = false;
 	private boolean inBattle = false;
 	private boolean inMenu = false;
+	private int logLineNumber;
+	
 
 	/**
 	 * Launch the application.
@@ -120,7 +121,7 @@ public class GUI extends JFrame {
 
 					gameLog.append("Game Start");
 					gameLog.append("=============");
-					updateLog(gameLog);
+					updateLog();
 
 					// Player player = CoreEngine.initializeGame();
 					// Player character will always take array slot 0
@@ -131,14 +132,16 @@ public class GUI extends JFrame {
 					TrainingDummy dummy = new TrainingDummy();
 					enemyCreatures.add(dummy);
 					gameLog.append("Battle Start!");
-					gameLog.append("Enemy " + enemyCreatures.get(0).getName() + " as appeared!");
-					updateLog(gameLog);
+					gameLog.append("Enemy " + enemyCreatures.get(0).getName() + " as appeared with " + enemyCreatures.get(0).getHpMax());
+					
 					inBattle = true;
 
 				} else {
 					gameLog.append("Error: Game already in progress.");
-					updateLog(gameLog);
+					
 				}
+			
+				updateLog();
 
 			}
 		});
@@ -154,47 +157,57 @@ public class GUI extends JFrame {
 		btnAttack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(inBattle == true) {
-					int damage = CoreEngine.attack(alliedCreatures.get(0), enemyCreatures.get(0));
+					int damage = CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures.get(0));
 					
 					if(damage != 0) {
 						gameLog.append("Dealt " + damage
 								+ " damage to" + enemyCreatures.get(0).getName());
+						gameLog.append(enemyCreatures.get(0).getName() + " has " + enemyCreatures.get(0).getHpCurrent() + " HP remaining!");
 					}
 					else {
 						gameLog.append("Failed to damage " + enemyCreatures.get(0).getName() + "!");
 					}
 					
-					updateLog(gameLog);
+					
 				}
 				else {
 					if(gameStarted == true) {
 						gameLog.append("There is nothing to strike at.");
-						updateLog(gameLog);
+						
 					}
 					else {
 						gameLog.append("How did you even do this?");
-						updateLog(gameLog);
+						
 					}
 				}
 				
 
+				updateLog();
 			}
 		});
 
 		// Reset the game to its initial state
-		mntmReset.addActionListener(new ActionListener() {
+		mntmEnd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (gameStarted != false) {
-					alliedCreatures.clear();
-					enemyCreatures.clear();
-					btnAttack.setEnabled(false);
-					gameStarted = false;
-					gameLog.append("===GAME OVER===");
-					updateLog(gameLog);
-					gameLog.resetLog();
+					int selection = JOptionPane.showConfirmDialog(mntmEnd, "Are you sure you wish to end this game?");
+					if(selection == 0) {
+						
+						alliedCreatures.clear();
+						enemyCreatures.clear();
+						btnAttack.setEnabled(false);
+						gameStarted = false;
+						gameLog.resetLog();
+						logLineNumber = gameLog.getSize();
+						textLog.setText("");
+						
+					}
+					
+					
+					
 				} else {
 					gameLog.append("Can't reset what hasn't started.");
-					updateLog(gameLog);
+					updateLog();
 				}
 
 			}
@@ -202,27 +215,26 @@ public class GUI extends JFrame {
 
 	}
 
-	// Updates the gamelog on the GUI
-	/*
-	 * private void updateLog(GameLog gameLog, String Message) {
-	 * gameLog.append(Message); ArrayList<String> tempLog =
-	 * gameLog.getLastMessages(); //String text = "";
-	 * 
-	 * for ( int i = tempLog.size()-1; (i >= 0); i--) {
-	 * 
-	 * textLog.append(tempLog.get(i));
-	 * 
-	 * 
-	 * 
-	 * }
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
+	
+	private void updateLog() {
+		ArrayList<String> tempLog = gameLog.getLastMessages(logLineNumber);
+		
 
-	private void updateLog(GameLog gameLog) {
-		ArrayList<String> tempLog = gameLog.getLastMessages();
+		for (int i = 0; (i < tempLog.size()); i++) {
+			
+
+			textLog.append(tempLog.get(i));
+
+		}
+		logLineNumber += tempLog.size();
+
+	}
+	
+
+	//Only kept around just incase
+	@Deprecated
+	private void updateLog(boolean something) {
+		ArrayList<String> tempLog = gameLog.getLastMessages(1);
 
 		for (int i = tempLog.size() - 1; (i >= 0); i--) {
 
@@ -248,6 +260,7 @@ public class GUI extends JFrame {
 		System.out.println("Init GameLog");
 		gameLog = new GameLog();
 		System.out.println("Gamelog initialized");
+		logLineNumber = gameLog.getSize();
 
 		setTitle("d20Game");
 		setIconImage(
@@ -270,8 +283,8 @@ public class GUI extends JFrame {
 		mntmLoadGame = new JMenuItem("Load Game");
 		mnFile.add(mntmLoadGame);
 
-		mntmReset = new JMenuItem("Reset Game");
-		mnFile.add(mntmReset);
+		mntmEnd = new JMenuItem("End Game");
+		mnFile.add(mntmEnd);
 
 		mntmExit = new JMenuItem("Exit Game");
 		mnFile.add(mntmExit);
@@ -286,43 +299,40 @@ public class GUI extends JFrame {
 			}
 		});
 
-		scrollPane = new JScrollPane();
-
 		JPanel pnlStats = new JPanel();
 		pnlStats.setBorder(new TitledBorder(null, "Stats", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-
-		textLog = new JTextArea();
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnAttack)
 						.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(textLog, GroupLayout.PREFERRED_SIZE, 371, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(scrollPane,
-										GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE))
-						.addComponent(btnAttack))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 344, GroupLayout.PREFERRED_SIZE)
-				.addContainerGap(5, Short.MAX_VALUE)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap(11, Short.MAX_VALUE)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 403, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(pnlStats, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+							.addGap(18)
+							.addComponent(btnAttack))
 						.addGroup(gl_contentPane.createSequentialGroup()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_contentPane.createSequentialGroup().addGap(144).addComponent(
-												scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-														.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 359,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(textLog, GroupLayout.PREFERRED_SIZE, 352,
-																GroupLayout.PREFERRED_SIZE))))
-								.addGap(29))
-						.addGroup(Alignment.TRAILING,
-								gl_contentPane.createSequentialGroup().addComponent(btnAttack).addContainerGap()))));
+							.addGap(9)
+							.addComponent(pnlStats, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
+		);
+		
+				textLog = new JTextArea();
+				scrollPane_1.setViewportView(textLog);
 
 		JProgressBar progressBar = new JProgressBar();
 		progressBar.setBounds(16, 32, 299, 14);

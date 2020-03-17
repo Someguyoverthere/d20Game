@@ -5,8 +5,9 @@ import common.actor.creature;
 public class TrainingDummy extends creature {
 
 	public TrainingDummy() {
-		super(10,10,10,10,10,10,10,true);
+		super(true, 10, 10);
 		name = "Training Dummy";
+		
 		
 		// TODO Auto-generated constructor stub
 	}

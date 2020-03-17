@@ -31,6 +31,8 @@ public abstract class creature {
 
 	protected int hpMax;
 	protected int hpCurrent;
+	protected int[] hitDice;
+	protected int[] rolledHP;
 	
 	protected String attackBonusAttribute = "str";
 
@@ -67,15 +69,21 @@ public abstract class creature {
 
 	}
 
-	public creature(boolean randomStats) {
+	public creature(boolean randomStats, int hdNumber, int hdSize) {
 		this.str = Roller.rollTotal(3, 6);
 		this.dex = Roller.rollTotal(3, 6);
 		this.con = Roller.rollTotal(3, 6);
 		this.intel = Roller.rollTotal(3, 6);
 		this.wis = Roller.rollTotal(3, 6);
 		this.cha = Roller.rollTotal(3, 6);
+		hitDice = new int[hdNumber];
+		for(int i = 0; i > hitDice.length; i++) {
+			hitDice[i] = hdSize;
+		}
+		rolledHP = Roller.rollSet(hdNumber, hdSize);
 		this.hpMax = Roller.rollTotal(3, 6);
 		this.hpCurrent = Roller.rollTotal(3, 6);
+		
 
 	}
 
@@ -283,6 +291,10 @@ public abstract class creature {
 
 	public void setHpCurrent(int hpCurrent) {
 		this.hpCurrent = hpCurrent;
+	}
+	
+	public void takeDamage(int damage) {
+		hpCurrent -= damage;
 	}
 
 	public int getAC() {
