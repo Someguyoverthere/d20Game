@@ -53,7 +53,7 @@ public class CoreEngine {
 	public void initializeMobs(double playerLevel, ArrayList<creature> enemies) {
 
 		// Generates the target CR
-		//weirdly the roller doesn't work if it's one line with target CR
+		// weirdly the roller doesn't work if it's one line with target CR
 		int roll = Roller.rollTotal(1, 4) - 2;
 		double targetCR = playerLevel + roll;
 
@@ -84,9 +84,31 @@ public class CoreEngine {
 
 		// loop for filling up the enemy array iteratively
 		System.out.println("Encounter total CR" + targetCR);
-		while (calcEncounterCR(enemies) != targetCR && encounterLoop < 50) {
+		while (targetCR > 0 && encounterLoop < 50) {
 			System.out.println("Encounter generation loop: " + encounterLoop);
-			levelRoll = Roller.rollTotal((float) .25, (float) targetCR);
+			if(targetCR >= 1 && Roller.rollTotal(1f, (float)targetCR+1) == targetCR+1) {
+				System.out.println("entering less than 1 branch");
+				switch(Roller.rollTotal(1, 3)) {
+				case 1: 
+					levelRoll = .25;
+					break;
+				case 2: 
+					levelRoll = .5;
+					break;
+				case 3: 
+					levelRoll = .75;
+					break;
+				
+				}
+				
+				
+			}
+			else {
+				levelRoll = Roller.rollTotal(1f, (float) targetCR);
+				
+			}
+			
+			System.out.println("Level Roll: " + levelRoll);
 
 			// sets the minimum in case it would go below .25
 			if (levelRoll < .25) {
@@ -95,12 +117,17 @@ public class CoreEngine {
 
 			// sets the maximum if the level roll would exceed the target CR
 			if (levelRoll > targetCR) {
-				levelRoll = targetCR - calcEncounterCR(enemies);
+				levelRoll = targetCR;
 			}
 
 			enemies.add(encounterLoop, addMob(levelRoll));
+			
+			targetCR -= enemies.get(encounterLoop).getCR();
+			
 
+			
 			encounterLoop++;
+			System.out.println("Remaining CR: " + targetCR);
 			if (encounterLoop > 49) {
 				System.out.println("Emergency Break");
 			}
@@ -110,8 +137,8 @@ public class CoreEngine {
 	}
 
 	// calculated the encounter's CR
-	public int calcEncounterCR(ArrayList<creature> enemies) {
-		int CR = 0;
+	public double calcEncounterCR(ArrayList<creature> enemies) {
+		double CR = 0;
 		try {
 			for (int i = 0; i < enemies.size(); i++) {
 				CR += enemies.get(0).getCR();
@@ -128,13 +155,15 @@ public class CoreEngine {
 	// in
 	private creature addMob(double CR) {
 		// Fun fact: switched don't like doubles or floats
+		System.out.println("Addmob CR: " + CR );
+		
 		if (CR == .25) {
 			return new TrainingDummy();
 		}
 		if (CR == .5) {
 			return new TrainingDoggo();
 		}
-		if(CR == .75) {
+		if (CR == .75) {
 			return new TrainingZebra();
 		}
 
