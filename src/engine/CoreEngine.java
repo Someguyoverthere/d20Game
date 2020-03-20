@@ -101,7 +101,7 @@ public class CoreEngine {
 			enemies.add(encounterLoop, addMob(levelRoll));
 
 			encounterLoop++;
-			if (encounterLoop > 50) {
+			if (encounterLoop > 49) {
 				System.out.println("Emergency Break");
 			}
 
