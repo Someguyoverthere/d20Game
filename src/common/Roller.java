@@ -41,6 +41,17 @@ public class Roller {
 		
 	}
 	
+	public static float rollTotal(float diceNum, float diceSize) {
+		float total = 0;
+		for(int i = 0; i < diceNum; i++) {
+			total += (int) (Math.random() * (diceSize - 1)) + 1;
+		}
+			
+		
+		return total;
+		
+	}
+	
 	public static int rollTotal(int[] diceNumAndSize) {
 		int total = 0;
 		for(int i = 0; i < diceNumAndSize[0]; i++) {

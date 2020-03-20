@@ -10,6 +10,7 @@ public class Player extends creature {
 		super(true, 1, 12);
 		name = "Player";
 		// TODO Auto-generated constructor stub
+		CR = 1;
 	}
 	
 	public int attack() {

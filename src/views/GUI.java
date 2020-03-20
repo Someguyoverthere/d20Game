@@ -69,6 +69,11 @@ public class GUI extends JFrame {
 	private boolean inBattle = false;
 	private boolean inMenu = false;
 	private int logLineNumber;
+	private JLabel lblDexNum;
+	private JLabel lblConNum;
+	private JLabel lblIntNum;
+	private JLabel lblWisNum;
+	private JLabel lblChaNum;
 	
 
 	/**
@@ -104,7 +109,7 @@ public class GUI extends JFrame {
 	}
 
 	// ========================================
-	//
+	//Buttons doing things should go under here
 	// ========================================
 	private void createEvents() {
 
@@ -127,12 +132,19 @@ public class GUI extends JFrame {
 					// Player character will always take array slot 0
 					// I.E creatures.get(0)
 					alliedCreatures.add(CoreEngine.initializeGame());
-					updateStats(alliedCreatures.get(0).getStr(), lblStrNum);
+					updateStats();
 					btnAttack.setEnabled(true);
-					TrainingDummy dummy = new TrainingDummy();
-					enemyCreatures.add(dummy);
+					//TrainingDummy dummy = new TrainingDummy();
+					//enemyCreatures.add(dummy);
+					initializeBattle();
 					gameLog.append("Battle Start!");
 					gameLog.append("Enemy " + enemyCreatures.get(0).getName() + " as appeared with " + enemyCreatures.get(0).getHpMax());
+					if(enemyCreatures.size() > 1) {
+						gameLog.append("along with!");
+						for(int i = 1; i < enemyCreatures.size(); i++) {
+							gameLog.append(enemyCreatures.get(i).getName() + " at " + enemyCreatures.get(i).getHpCurrent());
+						}
+					}
 					
 					inBattle = true;
 
@@ -145,15 +157,17 @@ public class GUI extends JFrame {
 
 			}
 		});
-
-		// Exit function
+		// ========================================
+		// Exit menu function
+		// ========================================
 		mntmExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(DO_NOTHING_ON_CLOSE);
 			}
 		});
-
+		// ========================================
 		// Attack button
+		// ========================================
 		btnAttack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(inBattle == true) {
@@ -185,8 +199,9 @@ public class GUI extends JFrame {
 				updateLog();
 			}
 		});
-
+		// ========================================
 		// Reset the game to its initial state
+		// ========================================
 		mntmEnd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (gameStarted != false) {
@@ -212,8 +227,25 @@ public class GUI extends JFrame {
 
 			}
 		});
+		
+		mntmSaveGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent argo0) {
+				
+			}
+		});
 
+	}//Create Events End
+	
+	
+
+	
+	
+	private void initializeBattle() {
+		CoreEngine.initializeMobs(alliedCreatures.get(0).getCR(), enemyCreatures);
+		
 	}
+	
+	
 
 	
 	private void updateLog() {
@@ -245,8 +277,13 @@ public class GUI extends JFrame {
 	}
 
 	// For updating character attributes when it would be nessecary
-	private void updateStats(int stat, JLabel attribute) {
-		attribute.setText(String.valueOf(stat));
+	private void updateStats() {
+		lblStrNum.setText(String.valueOf(alliedCreatures.get(0).getStr()));
+		lblDexNum.setText(String.valueOf(alliedCreatures.get(0).getDex()));
+		lblConNum.setText(String.valueOf(alliedCreatures.get(0).getCon()));
+		lblIntNum.setText(String.valueOf(alliedCreatures.get(0).getIntel()));
+		lblWisNum.setText(String.valueOf(alliedCreatures.get(0).getWis()));
+		lblChaNum.setText(String.valueOf(alliedCreatures.get(0).getCha()));
 
 	}
 
@@ -342,20 +379,60 @@ public class GUI extends JFrame {
 		JLabel lblHitPoints = new JLabel("Hit Points");
 		lblHitPoints.setBounds(6, 16, 46, 14);
 
-		JLabel lblHpAmount = new JLabel("hp amount");
-		lblHpAmount.setBounds(62, 16, 51, 14);
+		JLabel lblHPAmount = new JLabel("hp amount");
+		lblHPAmount.setBounds(62, 16, 51, 14);
 		pnlStats.setLayout(null);
 		pnlStats.add(progressBar);
 		pnlStats.add(lblHitPoints);
-		pnlStats.add(lblHpAmount);
+		pnlStats.add(lblHPAmount);
 
 		JLabel lblStrength = new JLabel("Strength:");
 		lblStrength.setBounds(16, 57, 46, 14);
 		pnlStats.add(lblStrength);
 
 		lblStrNum = new JLabel("?");
-		lblStrNum.setBounds(67, 57, 46, 14);
+		lblStrNum.setBounds(92, 57, 46, 14);
 		pnlStats.add(lblStrNum);
+		
+		lblDexNum = new JLabel("?");
+		lblDexNum.setBounds(92, 70, 46, 14);
+		pnlStats.add(lblDexNum);
+		
+		JLabel lblDexterity = new JLabel("Dexterity:");
+		lblDexterity.setBounds(16, 70, 49, 14);
+		pnlStats.add(lblDexterity);
+		
+		lblConNum = new JLabel("?");
+		lblConNum.setBounds(92, 82, 46, 14);
+		pnlStats.add(lblConNum);
+		
+		JLabel lblConstitution = new JLabel("Constitution:");
+		lblConstitution.setBounds(16, 82, 62, 14);
+		pnlStats.add(lblConstitution);
+		
+		lblIntNum = new JLabel("?");
+		lblIntNum.setBounds(92, 95, 46, 14);
+		pnlStats.add(lblIntNum);
+		
+		JLabel lblIntelligence = new JLabel("Intelligence:");
+		lblIntelligence.setBounds(16, 95, 59, 14);
+		pnlStats.add(lblIntelligence);
+		
+		lblWisNum = new JLabel("?");
+		lblWisNum.setBounds(92, 107, 46, 14);
+		pnlStats.add(lblWisNum);
+		
+		JLabel lblWisdom = new JLabel("Wisdom:");
+		lblWisdom.setBounds(16, 107, 41, 14);
+		pnlStats.add(lblWisdom);
+		
+		lblChaNum = new JLabel("?");
+		lblChaNum.setBounds(92, 120, 46, 14);
+		pnlStats.add(lblChaNum);
+		
+		JLabel lblCharisma = new JLabel("Charisma:");
+		lblCharisma.setBounds(16, 120, 48, 14);
+		pnlStats.add(lblCharisma);
 		contentPane.setLayout(gl_contentPane);
 
 	}

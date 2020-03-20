@@ -14,6 +14,12 @@ public abstract class creature {
 	protected boolean isWieldingMainhand = true;
 	protected boolean isWieldingOffHand = false;
 	protected String name = "";
+	protected boolean isDead = false;
+	protected boolean isIncapacitated = false;
+	
+	protected double CR;
+	
+	protected int EXP = 0;
 
 	protected int str;
 	protected int dex;
@@ -81,8 +87,11 @@ public abstract class creature {
 			hitDice[i] = hdSize;
 		}
 		rolledHP = Roller.rollSet(hdNumber, hdSize);
-		this.hpMax = Roller.rollTotal(3, 6);
-		this.hpCurrent = Roller.rollTotal(3, 6);
+		for(int i = 0; i < rolledHP.length; i++) {
+			hpMax += rolledHP[i];
+		}
+		hpMax += rolledHP.length * hdNumber; 
+		this.hpCurrent = hpMax;
 		
 
 	}
@@ -101,6 +110,14 @@ public abstract class creature {
 
 	}
 	
+	public double getCR() {
+		return CR;
+	}
+
+	public void setCR(int cR) {
+		CR = cR;
+	}
+
 	public int[] getDamageDice() {
 		int[] damage = new int[2];
 		damage[0] = equippedItems.get(0).getNumOfDamageDice();
@@ -111,6 +128,22 @@ public abstract class creature {
 		return damage;
 	}
 	
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setDead(boolean isDead) {
+		this.isDead = isDead;
+	}
+
+	public boolean isIncapacitated() {
+		return isIncapacitated;
+	}
+
+	public void setIncapacitated(boolean isIncapacitated) {
+		this.isIncapacitated = isIncapacitated;
+	}
+
 	public String getName() {
 		return name;
 	}
