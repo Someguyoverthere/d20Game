@@ -74,6 +74,7 @@ public class GUI extends JFrame {
 	private JLabel lblIntNum;
 	private JLabel lblWisNum;
 	private JLabel lblChaNum;
+	private JLabel lblHPAmount;
 	
 
 	/**
@@ -170,31 +171,13 @@ public class GUI extends JFrame {
 		// ========================================
 		btnAttack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(inBattle == true) {
-					int damage = CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures.get(0));
-					
-					if(damage != 0) {
-						gameLog.append("Dealt " + damage
-								+ " damage to" + enemyCreatures.get(0).getName());
-						gameLog.append(enemyCreatures.get(0).getName() + " has " + enemyCreatures.get(0).getHpCurrent() + " HP remaining!");
-					}
-					else {
-						gameLog.append("Failed to damage " + enemyCreatures.get(0).getName() + "!");
-					}
-					
-					
-				}
-				else {
-					if(gameStarted == true) {
-						gameLog.append("There is nothing to strike at.");
-						
-					}
-					else {
-						gameLog.append("How did you even do this?");
-						
-					}
-				}
 				
+				
+				String[] monsters = new String[enemyCreatures.size()];
+				for(int i = 0; i < monsters.length; i++) {
+					monsters[i] = enemyCreatures.get(i).getName();
+				}
+				int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
 
 				updateLog();
 			}
@@ -284,6 +267,7 @@ public class GUI extends JFrame {
 		lblIntNum.setText(String.valueOf(alliedCreatures.get(0).getIntel()));
 		lblWisNum.setText(String.valueOf(alliedCreatures.get(0).getWis()));
 		lblChaNum.setText(String.valueOf(alliedCreatures.get(0).getCha()));
+		lblHPAmount.setText(String.valueOf(alliedCreatures.get(0).getHpCurrent()) + "/" + String.valueOf(alliedCreatures.get(0).getHpMax()));
 
 	}
 
@@ -340,6 +324,7 @@ public class GUI extends JFrame {
 		pnlStats.setBorder(new TitledBorder(null, "Stats", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -369,6 +354,10 @@ public class GUI extends JFrame {
 		);
 		
 				textLog = new JTextArea();
+				textLog.setEditable(false);
+				textLog.setColumns(10);
+				textLog.setLineWrap(true);
+				textLog.setRows(10);
 				scrollPane_1.setViewportView(textLog);
 
 		JProgressBar progressBar = new JProgressBar();
@@ -379,7 +368,7 @@ public class GUI extends JFrame {
 		JLabel lblHitPoints = new JLabel("Hit Points");
 		lblHitPoints.setBounds(6, 16, 46, 14);
 
-		JLabel lblHPAmount = new JLabel("hp amount");
+		lblHPAmount = new JLabel("hp amount");
 		lblHPAmount.setBounds(62, 16, 51, 14);
 		pnlStats.setLayout(null);
 		pnlStats.add(progressBar);

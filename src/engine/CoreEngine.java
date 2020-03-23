@@ -6,6 +6,7 @@ import common.actor.player.Player;
 
 import java.util.ArrayList;
 
+import common.GameLog;
 import common.Roller;
 import common.actor.creatures.*;
 
@@ -19,15 +20,28 @@ public class CoreEngine {
 
 	}
 
-	public int meleeAttackAction(creature creature1, creature creature2) {
+	public int meleeAttackAction(creature creature1, creature creature2, GameLog gameLog) {
 		if (creature1.isWieldingMainhand() == true) {
 			if ((creature1.getAttackBonus()) + Roller.rollTotal(1, 20) > creature2.getAC()) {
 				int damage = creature1.rollDamageDice() + creature1.getMod(creature1.getStr());
 				creature2.takeDamage(damage);
-				return damage;
+				
+				if(damage != 0) {
+					gameLog.append("Dealt " + damage
+							+ " damage to" + creature1.getName());
+					gameLog.append(creature1.getName() + " has " + creature1.getHpCurrent() + " HP remaining!");
+					
+				
 
 			}
+				else {
+					gameLog.append("Failed to damage " + creature1.getName() + "!");
+				}
 
+		}
+		
+		
+		
 		}
 
 		return 0;
