@@ -177,7 +177,8 @@ public class GUI extends JFrame {
 				for(int i = 0; i < monsters.length; i++) {
 					monsters[i] = enemyCreatures.get(i).getName();
 				}
-				int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				//pretty sure this will be useful somewhere later, but not here
+				//int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
 
 				updateLog();
 			}
@@ -330,20 +331,22 @@ public class GUI extends JFrame {
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnAttack)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 403, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(pnlStats, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)))
+							.addContainerGap()
+							.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 403, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(99)
+							.addComponent(btnAttack)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(pnlStats, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
 							.addGap(18)
 							.addComponent(btnAttack))
