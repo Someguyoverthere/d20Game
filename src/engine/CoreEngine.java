@@ -70,6 +70,7 @@ public class CoreEngine {
 		// weirdly the roller doesn't work if it's one line with target CR
 		int roll = Roller.rollTotal(1, 4) - 2;
 		double targetCR = playerLevel + roll;
+		
 
 		// decision tree if CR is less than 1
 		if (targetCR < 1) {
@@ -84,7 +85,7 @@ public class CoreEngine {
 		}
 
 		// For testing only
-		// targetCR = 2;
+		 targetCR = 5;
 
 		createMobs(enemies, targetCR);
 		System.out.println("Encounter CR is: " + calcEncounterCR(enemies));
