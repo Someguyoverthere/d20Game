@@ -7,6 +7,13 @@ public class TrainingDoggo extends creature {
 		super(true, 3, 10);
 		name = "Training Doggo";
 		CR = 0.5;
+		
+	}
+
+	@Override
+	public String AI() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

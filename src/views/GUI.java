@@ -179,10 +179,11 @@ public class GUI extends JFrame {
 					monsters[i] = enemyCreatures.get(i).getName();
 				}
 				//pretty sure this will be useful somewhere later, but not here
-				//int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures, gameLog, selection);
 				//SingleTargetSelection something = new SingleTargetSelection();
 				//something.TargetSelection(enemyCreatures);
-				TargetingPane.singleTargetDialogue(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				//TargetingPane.singleTargetDialogue(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
 
 				updateLog();
 			}
@@ -250,8 +251,10 @@ public class GUI extends JFrame {
 
 	}
 	
+	
+	
 
-	//Only kept around just incase
+	//Only kept around just in case
 	@Deprecated
 	private void updateLog(boolean something) {
 		ArrayList<String> tempLog = gameLog.getLastMessages(1);

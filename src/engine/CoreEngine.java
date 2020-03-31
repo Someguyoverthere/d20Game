@@ -20,28 +20,45 @@ public class CoreEngine {
 
 	}
 
-	public int meleeAttackAction(creature creature1, creature creature2, GameLog gameLog) {
-		if (creature1.isWieldingMainhand() == true) {
-			if ((creature1.getAttackBonus()) + Roller.rollTotal(1, 20) > creature2.getAC()) {
-				int damage = creature1.rollDamageDice() + creature1.getMod(creature1.getStr());
-				creature2.takeDamage(damage);
-				
-				if(damage != 0) {
-					gameLog.append("Dealt " + damage
-							+ " damage to" + creature1.getName());
-					gameLog.append(creature1.getName() + " has " + creature1.getHpCurrent() + " HP remaining!");
-					
-				
+	public int meleeAttackAction(creature attacker, ArrayList<creature> defender, GameLog gameLog,
+			int selectedDefender) {
+		if (attacker.isWieldingMainhand() == true) {
+			if ((attacker.getAttackBonus()) + Roller.rollTotal(1, 20) > defender.get(selectedDefender).getAC()) {
+				int damage = attacker.rollDamageDice() + attacker.getMod(attacker.getStr());
+				defender.get(selectedDefender).takeDamage(damage);
 
-			}
-				else {
-					gameLog.append("Failed to damage " + creature1.getName() + "!");
+				if (damage != 0) {
+					gameLog.append("Dealt " + damage + " damage to" + defender.get(selectedDefender).getName());
+					
+					System.out.println("percent: " + defender.get(selectedDefender).getHPRemainingPercent() + "hp " + defender.get(selectedDefender).getHpCurrent() + "/" + defender.get(selectedDefender).getHpMax());
+
+					// Varies text depending on opponent remaining HP
+					if (defender.get(selectedDefender).getHPRemainingPercent() > 75) {
+						gameLog.append(defender.get(selectedDefender).getName() + " looks minorly injuried!");
+
+					}
+					if (defender.get(selectedDefender).getHPRemainingPercent() > 50
+							&& defender.get(selectedDefender).getHPRemainingPercent() < 75) {
+						gameLog.append(defender.get(selectedDefender).getName() + " looks moderately injuried!");
+
+					}
+					if (defender.get(selectedDefender).getHPRemainingPercent() > 25
+							&& defender.get(selectedDefender).getHPRemainingPercent() < 50) {
+						gameLog.append(defender.get(selectedDefender).getName() + " looks majorly injuried!");
+
+					}
+					if (defender.get(selectedDefender).getHPRemainingPercent() > 0
+							&& defender.get(selectedDefender).getHPRemainingPercent() < 25) {
+						gameLog.append(defender.get(selectedDefender).getName() + " looks gravely injuried!");
+
+					}
+
 				}
 
-		}
-		
-		
-		
+			} else {
+				gameLog.append("Failed to damage " + defender.get(selectedDefender).getName() + "!");
+			}
+
 		}
 
 		return 0;
@@ -62,6 +79,23 @@ public class CoreEngine {
 		return 0;
 
 	}
+	
+	public void enemyTurn(ArrayList<creature> attacker, ArrayList<creature> defender, GameLog gameLog) {
+		
+		for(int i = 0; i < attacker.size(); i++) {
+			switch(attacker.get(i).AI()) {
+			case "meleeAttack":
+				meleeAttackAction(attacker.get(i), defender, gameLog, Roller.rollTotal(1, defender.size())-1);
+			
+			default:
+				gameLog.append(attacker.get(i).getName() + " does nothing.");
+			}
+			
+		}
+		
+		
+		
+	}
 
 	// called by GUI to generated the encounter
 	public void initializeMobs(double playerLevel, ArrayList<creature> enemies) {
@@ -70,7 +104,6 @@ public class CoreEngine {
 		// weirdly the roller doesn't work if it's one line with target CR
 		int roll = Roller.rollTotal(1, 4) - 2;
 		double targetCR = playerLevel + roll;
-		
 
 		// decision tree if CR is less than 1
 		if (targetCR < 1) {
@@ -85,7 +118,7 @@ public class CoreEngine {
 		}
 
 		// For testing only
-		 targetCR = 5;
+		targetCR = 5;
 
 		createMobs(enemies, targetCR);
 		System.out.println("Encounter CR is: " + calcEncounterCR(enemies));
@@ -101,28 +134,26 @@ public class CoreEngine {
 		System.out.println("Encounter total CR" + targetCR);
 		while (targetCR > 0 && encounterLoop < 50) {
 			System.out.println("Encounter generation loop: " + encounterLoop);
-			if(targetCR >= 1 && Roller.rollTotal(1f, (float)targetCR+1) == targetCR+1) {
+			if (targetCR >= 1 && Roller.rollTotal(1f, (float) targetCR + 1) == targetCR + 1) {
 				System.out.println("entering less than 1 branch");
-				switch(Roller.rollTotal(1, 3)) {
-				case 1: 
+				switch (Roller.rollTotal(1, 3)) {
+				case 1:
 					levelRoll = .25;
 					break;
-				case 2: 
+				case 2:
 					levelRoll = .5;
 					break;
-				case 3: 
+				case 3:
 					levelRoll = .75;
 					break;
-				
+
 				}
-				
-				
-			}
-			else {
+
+			} else {
 				levelRoll = Roller.rollTotal(1f, (float) targetCR);
-				
+
 			}
-			
+
 			System.out.println("Level Roll: " + levelRoll);
 
 			// sets the minimum in case it would go below .25
@@ -136,11 +167,9 @@ public class CoreEngine {
 			}
 
 			enemies.add(encounterLoop, addMob(levelRoll));
-			
-			targetCR -= enemies.get(encounterLoop).getCR();
-			
 
-			
+			targetCR -= enemies.get(encounterLoop).getCR();
+
 			encounterLoop++;
 			System.out.println("Remaining CR: " + targetCR);
 			if (encounterLoop > 49) {
@@ -170,8 +199,8 @@ public class CoreEngine {
 	// in
 	private creature addMob(double CR) {
 		// Fun fact: switched don't like doubles or floats
-		System.out.println("Addmob CR: " + CR );
-		
+		System.out.println("Addmob CR: " + CR);
+
 		if (CR == .25) {
 			return new TrainingDummy();
 		}

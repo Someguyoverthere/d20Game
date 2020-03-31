@@ -213,6 +213,8 @@ public abstract class creature {
 		return getMod(str);
 		
 	}
+	
+	public abstract String AI();
 
 	public int getStr() {
 		return str;
@@ -320,6 +322,11 @@ public abstract class creature {
 
 	public int getHpCurrent() {
 		return hpCurrent;
+	}
+	
+	public int getHPRemainingPercent() {
+		float whatever = (float) hpCurrent/(float) hpMax;
+		return (int) (whatever*100);
 	}
 
 	public void setHpCurrent(int hpCurrent) {

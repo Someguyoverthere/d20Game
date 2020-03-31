@@ -9,4 +9,10 @@ public class TrainingGobbo extends creature {
 		CR = 1;
 	}
 
+	@Override
+	public String AI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
