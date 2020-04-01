@@ -6,12 +6,15 @@ import java.util.ArrayList;
 public abstract class creature {
 	
 	ArrayList<object> Inventory = new ArrayList<object>();
-	ArrayList<object> equippedItems = new ArrayList<object>();
-	//Slot 0 is the mainhand slot
-	//Slot 1 is the offhand slot
-	//Slot 2 is the armor slot
+	ArrayList<object> equippedWeapons = new ArrayList<object>();
+	ArrayList<object> naturalWeapons;
 	
-	protected boolean isWieldingMainhand = true;
+	
+	int handSlots = 0;
+	object equippedArmor = null;
+	
+	
+	protected boolean isWieldingMainhand = false;
 	protected boolean isWieldingOffHand = false;
 	protected String name = "";
 	protected boolean isDead = false;
@@ -119,9 +122,9 @@ public abstract class creature {
 	}
 
 	public int[] getDamageDice() {
-		int[] damage = new int[2];
-		damage[0] = equippedItems.get(0).getNumOfDamageDice();
-		damage[1] = equippedItems.get(0).getSizeOfDamageDice();
+		int[] damage = new int[2*equippedWeapons.size()];
+		damage[0] = equippedWeapons.get(0).getNumOfDamageDice();
+		damage[1] = equippedWeapons.get(0).getSizeOfDamageDice();
 		
 		
 		
@@ -157,7 +160,7 @@ public abstract class creature {
 	
 	public int rollDamageDice() {
 		
-		return Roller.rollTotal(equippedItems.get(0).getNumOfDamageDice(), equippedItems.get(0).getSizeOfDamageDice());
+		return Roller.rollTotal(equippedWeapons.get(0).getNumOfDamageDice(), equippedWeapons.get(0).getSizeOfDamageDice());
 	}
 	
 	public void addItem(object item) {
@@ -165,7 +168,7 @@ public abstract class creature {
 	}
 	
 	public void equipMainHand(int itemNumber) {
-		equippedItems.add(0, Inventory.get(itemNumber));
+		equippedWeapons.add(0, Inventory.get(itemNumber));
 		
 	}
 	
@@ -214,7 +217,10 @@ public abstract class creature {
 		
 	}
 	
-	public abstract String AI();
+	public String AI() {
+		
+		return "test";
+	}
 
 	public int getStr() {
 		return str;

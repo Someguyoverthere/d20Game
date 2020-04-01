@@ -60,8 +60,14 @@ public class GUI extends JFrame {
 	private JLabel lblStrNum;
 	private JScrollPane scrollPane_1;
 	private JMenuItem mntmEnd;
+	private JLabel lblDexNum;
+	private JLabel lblConNum;
+	private JLabel lblIntNum;
+	private JLabel lblWisNum;
+	private JLabel lblChaNum;
+	private JLabel lblHPAmount;
 
-	// Game engine specific fields
+	//fields specific to gameplay
 	GameLog gameLog;
 	CoreEngine CoreEngine;
 	ArrayList<creature> enemyCreatures = new ArrayList<creature>();
@@ -70,12 +76,10 @@ public class GUI extends JFrame {
 	private boolean inBattle = false;
 	private boolean inMenu = false;
 	private int logLineNumber;
-	private JLabel lblDexNum;
-	private JLabel lblConNum;
-	private JLabel lblIntNum;
-	private JLabel lblWisNum;
-	private JLabel lblChaNum;
-	private JLabel lblHPAmount;
+	private int actionsRemaining;
+	private int globalTurnCount;
+	private int battleTurnCount;
+	
 	
 
 	/**
@@ -140,11 +144,11 @@ public class GUI extends JFrame {
 					//enemyCreatures.add(dummy);
 					initializeBattle();
 					gameLog.append("Battle Start!");
-					gameLog.append("Enemy " + enemyCreatures.get(0).getName() + " as appeared with " + enemyCreatures.get(0).getHpMax());
+					gameLog.append("Enemy " + enemyCreatures.get(0).getName());
 					if(enemyCreatures.size() > 1) {
 						gameLog.append("along with!");
 						for(int i = 1; i < enemyCreatures.size(); i++) {
-							gameLog.append(enemyCreatures.get(i).getName() + " at " + enemyCreatures.get(i).getHpCurrent());
+							gameLog.append(enemyCreatures.get(i).getName());
 						}
 					}
 					
@@ -186,6 +190,7 @@ public class GUI extends JFrame {
 				//TargetingPane.singleTargetDialogue(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
 
 				updateLog();
+				turnCheck();
 			}
 		});
 		// ========================================
@@ -229,8 +234,17 @@ public class GUI extends JFrame {
 
 	
 	
+	private void turnCheck() {
+		if(actionsRemaining == 0) {
+			CoreEngine.aITurn(alliedCreatures, enemyCreatures, gameLog);
+			CoreEngine.aITurn(enemyCreatures, alliedCreatures, gameLog);
+		}
+		
+	}
+
 	private void initializeBattle() {
 		CoreEngine.initializeMobs(alliedCreatures.get(0).getCR(), enemyCreatures);
+		actionsRemaining = 3;
 		
 	}
 	

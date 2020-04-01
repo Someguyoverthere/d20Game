@@ -11,6 +11,7 @@ import common.Roller;
 import common.actor.creatures.*;
 
 public class CoreEngine {
+	
 
 	public Player initializeGame() {
 		Player player = new Player(false);
@@ -80,16 +81,23 @@ public class CoreEngine {
 
 	}
 	
-	public void enemyTurn(ArrayList<creature> attacker, ArrayList<creature> defender, GameLog gameLog) {
+	public void aITurn(ArrayList<creature> attacker, ArrayList<creature> defender, GameLog gameLog) {
+		int i = 0;
+		if(attacker.get(0).getName().equals("Player")) {
+			i++;
+		}
 		
-		for(int i = 0; i < attacker.size(); i++) {
+		while( i < attacker.size()) {
 			switch(attacker.get(i).AI()) {
 			case "meleeAttack":
 				meleeAttackAction(attacker.get(i), defender, gameLog, Roller.rollTotal(1, defender.size())-1);
+				break;
 			
 			default:
 				gameLog.append(attacker.get(i).getName() + " does nothing.");
+				break;
 			}
+			i++;
 			
 		}
 		
