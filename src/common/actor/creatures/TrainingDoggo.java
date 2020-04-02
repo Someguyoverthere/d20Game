@@ -13,7 +13,7 @@ public class TrainingDoggo extends creature {
 	@Override
 	public String AI() {
 		// TODO Auto-generated method stub
-		return null;
+		return "test";
 	}
 
 }

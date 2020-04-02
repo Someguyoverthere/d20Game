@@ -169,6 +169,7 @@ public abstract class creature {
 	
 	public void equipMainHand(int itemNumber) {
 		equippedWeapons.add(0, Inventory.get(itemNumber));
+		isWieldingMainhand = true;
 		
 	}
 	

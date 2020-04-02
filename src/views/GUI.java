@@ -184,7 +184,9 @@ public class GUI extends JFrame {
 				}
 				//pretty sure this will be useful somewhere later, but not here
 				int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				System.out.println("Running attack action");
 				CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures, gameLog, selection);
+				actionsRemaining--;
 				//SingleTargetSelection something = new SingleTargetSelection();
 				//something.TargetSelection(enemyCreatures);
 				//TargetingPane.singleTargetDialogue(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
@@ -236,9 +238,15 @@ public class GUI extends JFrame {
 	
 	private void turnCheck() {
 		if(actionsRemaining == 0) {
-			CoreEngine.aITurn(alliedCreatures, enemyCreatures, gameLog);
+			if(alliedCreatures.size() > 1) {
+				CoreEngine.aITurn(alliedCreatures, enemyCreatures, gameLog);
+			}
+			
 			CoreEngine.aITurn(enemyCreatures, alliedCreatures, gameLog);
+			updateLog();
+			actionsRemaining = 3;
 		}
+			
 		
 	}
 

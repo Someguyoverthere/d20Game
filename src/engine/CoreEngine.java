@@ -29,7 +29,7 @@ public class CoreEngine {
 				defender.get(selectedDefender).takeDamage(damage);
 
 				if (damage != 0) {
-					gameLog.append("Dealt " + damage + " damage to" + defender.get(selectedDefender).getName());
+					gameLog.append(attacker.getName() + " dealt " + damage + " damage to" + defender.get(selectedDefender).getName());
 					
 					System.out.println("percent: " + defender.get(selectedDefender).getHPRemainingPercent() + "hp " + defender.get(selectedDefender).getHpCurrent() + "/" + defender.get(selectedDefender).getHpMax());
 
@@ -82,12 +82,15 @@ public class CoreEngine {
 	}
 	
 	public void aITurn(ArrayList<creature> attacker, ArrayList<creature> defender, GameLog gameLog) {
+		System.out.println("AI Turn");
 		int i = 0;
 		if(attacker.get(0).getName().equals("Player")) {
+			System.out.println("Player check success");
 			i++;
 		}
 		
 		while( i < attacker.size()) {
+			System.out.println("Attacker loop");
 			switch(attacker.get(i).AI()) {
 			case "meleeAttack":
 				meleeAttackAction(attacker.get(i), defender, gameLog, Roller.rollTotal(1, defender.size())-1);
