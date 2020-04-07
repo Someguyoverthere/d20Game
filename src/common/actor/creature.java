@@ -93,7 +93,47 @@ public abstract class creature {
 		for(int i = 0; i < rolledHP.length; i++) {
 			hpMax += rolledHP[i];
 		}
-		hpMax += rolledHP.length * hdNumber; 
+		hpMax += getMod(this.con) * hdNumber; 
+		this.hpCurrent = hpMax;
+		
+
+	}
+	
+	public creature(String genMethod, int hdNumber, int hdSize) {
+		switch(genMethod) {
+		case "4d6":
+			System.out.println("Adv. gen");
+			this.str = Roller.rollTotalDropOne(4, 8);
+			this.dex = Roller.rollTotalDropOne(4, 8);
+			this.con = Roller.rollTotalDropOne(4, 8);
+			this.intel = Roller.rollTotalDropOne(4, 8);
+			this.wis = Roller.rollTotalDropOne(4, 8);
+			this.cha = Roller.rollTotalDropOne(4, 8);
+			break;
+			
+			
+		default:
+			this.str = Roller.rollTotal(3, 6);
+			this.dex = Roller.rollTotal(3, 6);
+			this.con = Roller.rollTotal(3, 6);
+			this.intel = Roller.rollTotal(3, 6);
+			this.wis = Roller.rollTotal(3, 6);
+			this.cha = Roller.rollTotal(3, 6);
+			break;
+				
+		}
+		
+		
+		
+		hitDice = new int[hdNumber];
+		for(int i = 0; i > hitDice.length; i++) {
+			hitDice[i] = hdSize;
+		}
+		rolledHP = Roller.rollSet(hdNumber, hdSize);
+		for(int i = 0; i < rolledHP.length; i++) {
+			hpMax += rolledHP[i];
+		}
+		hpMax += getMod(this.con) * hdNumber; 
 		this.hpCurrent = hpMax;
 		
 
@@ -193,7 +233,7 @@ public abstract class creature {
 
 	public int getMod(int stat) {
 		
-		double mod = (10 - stat)/2;
+		double mod = (stat - 10)/2;
 
 		if (mod > 0) { // if attribute modifier is positive, we can cast as an int and return it since
 						// we don't care if the decimal gets cut off

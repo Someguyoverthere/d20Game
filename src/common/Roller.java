@@ -41,6 +41,30 @@ public class Roller {
 		
 	}
 	
+	public static int rollTotalDropOne(int diceNum, int diceSize) {
+		int total = 0;
+		int roll;
+		int lowestNum = Integer.MAX_VALUE;
+		
+		
+		for(int i = 0; i < diceNum; i++) {
+			roll = (int) (Math.random() * (diceSize - 1)) + 1;
+			total += roll;
+			
+			if(roll <= lowestNum) {
+				lowestNum = roll;
+			}
+			
+		}
+		
+		total -= lowestNum;
+		
+			
+		
+		return total;
+		
+	}
+	
 	public static float rollTotal(float diceNum, float diceSize) {
 		float total = 0;
 		for(int i = 0; i < diceNum; i++) {

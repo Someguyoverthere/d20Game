@@ -11,7 +11,6 @@ import common.Roller;
 import common.actor.creatures.*;
 
 public class CoreEngine {
-	
 
 	public Player initializeGame() {
 		Player player = new Player(false);
@@ -29,30 +28,16 @@ public class CoreEngine {
 				defender.get(selectedDefender).takeDamage(damage);
 
 				if (damage != 0) {
-					gameLog.append(attacker.getName() + " dealt " + damage + " damage to" + defender.get(selectedDefender).getName());
-					
-					System.out.println("percent: " + defender.get(selectedDefender).getHPRemainingPercent() + "hp " + defender.get(selectedDefender).getHpCurrent() + "/" + defender.get(selectedDefender).getHpMax());
+					gameLog.append(attacker.getName() + " dealt " + damage + " damage to"
+							+ defender.get(selectedDefender).getName());
+
+					System.out.println("percent: " + defender.get(selectedDefender).getHPRemainingPercent() + "hp "
+							+ defender.get(selectedDefender).getHpCurrent() + "/"
+							+ defender.get(selectedDefender).getHpMax());
 
 					// Varies text depending on opponent remaining HP
-					if (defender.get(selectedDefender).getHPRemainingPercent() > 75) {
-						gameLog.append(defender.get(selectedDefender).getName() + " looks minorly injuried!");
-
-					}
-					if (defender.get(selectedDefender).getHPRemainingPercent() > 50
-							&& defender.get(selectedDefender).getHPRemainingPercent() < 75) {
-						gameLog.append(defender.get(selectedDefender).getName() + " looks moderately injuried!");
-
-					}
-					if (defender.get(selectedDefender).getHPRemainingPercent() > 25
-							&& defender.get(selectedDefender).getHPRemainingPercent() < 50) {
-						gameLog.append(defender.get(selectedDefender).getName() + " looks majorly injuried!");
-
-					}
-					if (defender.get(selectedDefender).getHPRemainingPercent() > 0
-							&& defender.get(selectedDefender).getHPRemainingPercent() < 25) {
-						gameLog.append(defender.get(selectedDefender).getName() + " looks gravely injuried!");
-
-					}
+					healthCheck(defender.get(selectedDefender), gameLog);
+					
 
 				}
 
@@ -80,31 +65,85 @@ public class CoreEngine {
 		return 0;
 
 	}
-	
+
 	public void aITurn(ArrayList<creature> attacker, ArrayList<creature> defender, GameLog gameLog) {
 		System.out.println("AI Turn");
 		int i = 0;
-		if(attacker.get(0).getName().equals("Player")) {
+		int target = 0;
+
+		// Check to make sure the target is valid
+		while (deathCheck(defender.get(target))) {
+			target = Roller.rollTotal(1, defender.size()) - 1;
+
+		}
+
+		// advances the array incase player is there, so it won't take any action
+		if (attacker.get(0).getName().equals("Player")) {
 			System.out.println("Player check success");
 			i++;
 		}
-		
-		while( i < attacker.size()) {
+		// Run a loop for each attacker to take an action
+		while (i < attacker.size()) {
 			System.out.println("Attacker loop");
-			switch(attacker.get(i).AI()) {
-			case "meleeAttack":
-				meleeAttackAction(attacker.get(i), defender, gameLog, Roller.rollTotal(1, defender.size())-1);
-				break;
-			
-			default:
-				gameLog.append(attacker.get(i).getName() + " does nothing.");
-				break;
+
+			// check to see if the attacker is alive and able to attack
+			if (!deathCheck(attacker.get(i))) {
+
+				switch (attacker.get(i).AI()) {
+				case "meleeAttack":
+					meleeAttackAction(attacker.get(i), defender, gameLog, target);
+					break;
+
+				default:
+					gameLog.append(attacker.get(i).getName() + " does nothing.");
+					break;
+				}
+				
+				
+
+			} else {
+				System.out.println(attacker.get(i) + "is unable to fight.");
+
 			}
+
 			i++;
-			
+
+		}
+
+	}
+
+	// checks if a creature is dead or incapacitated
+	public boolean deathCheck(creature creature) {
+		if (creature.isDead() || creature.isIncapacitated() || creature.getHpCurrent() <= 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void healthCheck(creature defender, GameLog gameLog) {
+		if (defender.getHPRemainingPercent() > 75) {
+			gameLog.append(defender.getName() + " looks minorly injuried!");
+
+		}
+		if (defender.getHPRemainingPercent() > 50
+				&& defender.getHPRemainingPercent() < 75) {
+			gameLog.append(defender.getName() + " looks moderately injuried!");
+
+		}
+		if (defender.getHPRemainingPercent() > 25
+				&& defender.getHPRemainingPercent() < 50) {
+			gameLog.append(defender.getName() + " looks majorly injuried!");
+
+		}
+		if (defender.getHPRemainingPercent() > 0
+				&& defender.getHPRemainingPercent() < 25) {
+			gameLog.append(defender.getName() + " looks gravely injuried!");
+
 		}
 		
-		
+		if (defender.getHPRemainingPercent() <= 0) {
+			gameLog.append(defender.getName() + " has fallen in battle!");
+		}
 		
 	}
 
