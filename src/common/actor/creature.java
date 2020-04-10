@@ -98,17 +98,17 @@ public abstract class creature {
 		
 
 	}
-	
+	//For non-standard attribute generation
 	public creature(String genMethod, int hdNumber, int hdSize) {
 		switch(genMethod) {
 		case "4d6":
 			System.out.println("Adv. gen");
-			this.str = Roller.rollTotalDropOne(4, 8);
-			this.dex = Roller.rollTotalDropOne(4, 8);
-			this.con = Roller.rollTotalDropOne(4, 8);
-			this.intel = Roller.rollTotalDropOne(4, 8);
-			this.wis = Roller.rollTotalDropOne(4, 8);
-			this.cha = Roller.rollTotalDropOne(4, 8);
+			this.str = Roller.rollTotalDropOne(4, 6);
+			this.dex = Roller.rollTotalDropOne(4, 6);
+			this.con = Roller.rollTotalDropOne(4, 6);
+			this.intel = Roller.rollTotalDropOne(4, 6);
+			this.wis = Roller.rollTotalDropOne(4, 6);
+			this.cha = Roller.rollTotalDropOne(4, 6);
 			break;
 			
 			

@@ -178,15 +178,28 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				
-				String[] monsters = new String[enemyCreatures.size()];
-				for(int i = 0; i < monsters.length; i++) {
+				String[] monsters = new String[enemyCreatures.size()+1];
+				for(int i = 0; i < monsters.length-1; i++) {
 					monsters[i] = enemyCreatures.get(i).getName();
 				}
+				monsters[monsters.length-1] = "Cancel";
 				//pretty sure this will be useful somewhere later, but not here
-				int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
-				System.out.println("Running attack action");
-				CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures, gameLog, selection);
-				actionsRemaining--;
+				
+				
+				int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				System.out.println("selection" + selection);
+				System.out.println("cancel location: " + (monsters.length-1));
+				
+				if(selection != -1 || selection != monsters.length-1) {
+
+					System.out.println("Running attack action");
+					CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures, gameLog, selection);
+					actionsRemaining--;
+					
+				}
+				
+				
+				
 				//SingleTargetSelection something = new SingleTargetSelection();
 				//something.TargetSelection(enemyCreatures);
 				//TargetingPane.singleTargetDialogue(null, "Please select a target", "Select Target", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
