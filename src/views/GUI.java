@@ -190,11 +190,15 @@ public class GUI extends JFrame {
 				System.out.println("selection" + selection);
 				System.out.println("cancel location: " + (monsters.length-1));
 				
-				if(selection != -1 || selection != monsters.length-1) {
+				if((selection != (-1))){
+					if((selection != (monsters.length-1))){
+						System.out.println("Running attack action");
+						CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures, gameLog, selection);
+						actionsRemaining--;
+						
+					}
 
-					System.out.println("Running attack action");
-					CoreEngine.meleeAttackAction(alliedCreatures.get(0), enemyCreatures, gameLog, selection);
-					actionsRemaining--;
+					
 					
 				}
 				
