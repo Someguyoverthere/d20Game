@@ -31,6 +31,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.Label;
 
 import javax.swing.JMenuBar;
@@ -177,19 +178,69 @@ public class GUI extends JFrame {
 		btnAttack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
+				//Creates a new string array to hold the names of the monsters in the array
+				//checks if the given monster is incapacitated before adding them to the list
+				int livingEnemies = 0;
 				
-				String[] monsters = new String[enemyCreatures.size()+1];
-				for(int i = 0; i < monsters.length-1; i++) {
-					monsters[i] = enemyCreatures.get(i).getName();
+				for(int i = 0; i < enemyCreatures.size(); i++) {
+					if(!enemyCreatures.get(i).isIncapacitated()) {
+						if(!enemyCreatures.get(i).isDead()) {
+							livingEnemies++;
+							
+							
+							
+						}
+						
+						
+					}
+					
 				}
+				
+				
+				String[] monsters = new String[livingEnemies+1];
+				
+				
+				
+				for(int i = 0; i < monsters.length-1; i++) {
+					if(!enemyCreatures.get(i).isIncapacitated()) {// Checks for incapacitation
+						if(!enemyCreatures.get(i).isDead()) {// checks for death
+							monsters[i] = enemyCreatures.get(i).getName();
+							if(i != 0) {
+								// alters the name of a monster slightly to ensure that when showOptionDialog comes up, each monster has a unique name
+								//otherwise duplicate strings return the same selection number, which can cause nulls later when the array begins to shrink
+								if(monsters[i-1].equals(monsters[i])) {
+									monsters[i]+= "1";
+									
+									
+									
+								}
+							}
+							
+						}
+						
+						
+					}
+					
+				}
+				//adds the cancel button to the last open slot in the array
 				monsters[monsters.length-1] = "Cancel";
-				//pretty sure this will be useful somewhere later, but not here
 				
 				
-				int selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				//brings up the dialogue for selecting a target; temporary targeting system.
+				int selection = 0;
+				try {
+					selection = JOptionPane.showOptionDialog(null, "Please select a target", "Select Target", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, monsters, 0);
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					for(int i = 0; i < monsters.length; i++) {
+						System.out.println(monsters[i]);
+					};
+				}
 				System.out.println("selection" + selection);
 				System.out.println("cancel location: " + (monsters.length-1));
 				
+				//Checks to see if the attack has to be aborted. -1 is returned when showOptionDialogue is closed with the X button
+				//the latter check refers to clicking the Cancel button.
 				if((selection != (-1))){
 					if((selection != (monsters.length-1))){
 						System.out.println("Running attack action");

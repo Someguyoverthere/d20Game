@@ -143,6 +143,7 @@ public class CoreEngine {
 		
 		if (defender.getHPRemainingPercent() <= 0) {
 			gameLog.append(defender.getName() + " has fallen in battle!");
+			defender.setDead(true);
 		}
 		
 	}

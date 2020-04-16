@@ -7,6 +7,7 @@ public class TrainingGobbo extends creature {
 		super(true, 4, 10);
 		name = "Training Gobbo";
 		CR = 1;
+		super.setAC(-5);
 	}
 
 	@Override
